@@ -1,8 +1,5 @@
 package com.subhasis4502.courseapidata.lesson;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,12 +18,11 @@ public class LessonController {
     private LessonService lessonService;
 
     @RequestMapping("/lessons/course/{courseId}")
-    public List<Lesson> getAllLessons(@PathVariable String courseId) {
+    public ResponseEntity<?> getAllLessons(@PathVariable String courseId) {
         try {
-            return lessonService.getAllLessons(courseId);
+            return ResponseEntity.ok(lessonService.getAllLessons(courseId));
         } catch (Exception e) {
-            e.printStackTrace();
-            return Collections.singletonList(new Lesson("500", "Error", "Error getting lessons", "", ""));
+            return ResponseEntity.status(500).body("Error getting lessons");
         }
     }
 
@@ -55,23 +51,23 @@ public class LessonController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/lessons/{topicId}/{courseId}")
-    public Lesson updateLesson(@RequestBody Lesson lesson, @PathVariable String topicId, @PathVariable String courseId) {
+    public ResponseEntity<String> updateLesson(@RequestBody Lesson lesson, @PathVariable String topicId, @PathVariable String courseId) {
         try {
             lesson.setCourse(new Course(courseId, "", "", topicId));
-            return lessonService.updateLesson(lesson);
+            return ResponseEntity.ok("Topic updated successfully");
         } catch (Exception e) {
             e.printStackTrace();
-            return new Lesson("500", "Error","An error occurred","","");
+            return ResponseEntity.status(500).body("Failed to add lesson. Error: " + e.getMessage());
         }
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/lessons/{lessonId}")
-    public String deleteLesson(@PathVariable String lessonId) {
+    public ResponseEntity<String> deleteLesson(@PathVariable String lessonId) {
         try {
             lessonService.deleteLesson(lessonId);
-            return "Lesson deleted successfully";
+            return ResponseEntity.ok("Lesson deleted successfully");
         } catch (Exception e) {
-            return "Error deleting lesson. Error: " + e.getMessage();
+            return ResponseEntity.status(500).body("Error deleting lesson. Error: " + e.getMessage());
         }
     }
 }

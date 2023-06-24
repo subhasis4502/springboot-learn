@@ -1,8 +1,5 @@
 package com.subhasis4502.courseapidata.course;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,22 +18,22 @@ public class CourseController {
     private CourseService courseService;
 
     @RequestMapping("/courses/topics/{topicId}")
-    public List<Course> getAllCourses(@PathVariable String topicId) {
+    public ResponseEntity<?> getAllCourses(@PathVariable String topicId) {
         try {
-            return courseService.getAllCourses(topicId);
+            return ResponseEntity.ok(courseService.getAllCourses(topicId));
         } catch (Exception e) {
             e.printStackTrace();
-            return Collections.singletonList(new Course("500", "Error", "Error getting courses", ""));
+            return ResponseEntity.status(500).body("Error getting courses");
         }
     }
 
     @RequestMapping("/courses/{courseId}")
-    public Course getCourse(@PathVariable String courseId) {
+    public ResponseEntity<?> getCourse(@PathVariable String courseId) {
         try {
-            return courseService.getCourse(courseId);
+            return ResponseEntity.ok(courseService.getCourse(courseId));
         } catch (Exception e) {
             e.printStackTrace();
-            return new Course("500", "Error", "Error getting this course", "");
+            return ResponseEntity.status(500).body("Error getting this course");
         }
     }
 
@@ -45,7 +42,7 @@ public class CourseController {
         try {
             course.setTopic(new Topic(topicId, "", ""));
             courseService.addCourse(course);
-            return ResponseEntity.ok("Lesson added successfully");
+            return ResponseEntity.ok("Course added successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to add course. Error: " + e.getMessage());
@@ -53,23 +50,24 @@ public class CourseController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/courses/{topicId}")
-    public Course updateCourse(@RequestBody Course course, @PathVariable String topicId) {
+    public ResponseEntity<String> updateCourse(@RequestBody Course course, @PathVariable String topicId) {
         try{
             course.setTopic(new Topic(topicId, "", ""));
-            return courseService.updateCourse(course);
+            courseService.updateCourse(course);
+            return ResponseEntity.ok("Course updated successfully");
         } catch(Exception e) {
             e.printStackTrace();
-            return new Course("500", "Error", "Error updating course", topicId);
+            return ResponseEntity.status(500).body("Error updating course");
         }
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/courses/{courseId}")
-    public String deleteCourse(@PathVariable String courseId) {
+    public ResponseEntity<String> deleteCourse(@PathVariable String courseId) {
         try {
             courseService.deleteCourse(courseId);
-            return "Course deleted successfully";
+            return ResponseEntity.ok("Course deleted successfully");
         } catch (Exception e) {
-            return "Error deleting course. Error: " + e.getMessage();
+            return ResponseEntity.status(500).body("Error deleting course. Error: " + e.getMessage());
         }
     }
 }

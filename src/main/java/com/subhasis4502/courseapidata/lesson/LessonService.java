@@ -23,12 +23,12 @@ public class LessonService {
         return lessonRepository.findById(id).get();
     }
 
-    public Lesson addLesson(Lesson lesson) {
-        return lessonRepository.save(lesson);
+    public void addLesson(Lesson lesson) {
+        lessonRepository.save(lesson);
     }
 
-    public Lesson updateLesson(Lesson lesson) {
-        return lessonRepository.save(lesson);
+    public void updateLesson(Lesson lesson) {
+        lessonRepository.save(lesson);
     }
 
     public void deleteLesson(String id) {

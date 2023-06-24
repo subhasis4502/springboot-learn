@@ -27,8 +27,8 @@ public class CourseService {
         courseRepository.save(Course);
     }
 
-    public Course updateCourse(Course Course) {
-        return courseRepository.save(Course);
+    public void updateCourse(Course Course) {
+        courseRepository.save(Course);
     }
 
     public void deleteCourse(String id) {

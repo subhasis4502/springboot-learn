@@ -1,17 +1,12 @@
 package com.subhasis4502.courseapidata.topic;
 
-import java.util.Collections;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
 
 @RestController
 public class TopicController {
@@ -20,22 +15,20 @@ public class TopicController {
     private TopicService topicService;
 
     @RequestMapping("/topics")
-    public List<Topic> getAllTopics() {
+    public ResponseEntity<?> getAllTopics() {
         try {
-            return topicService.getAllTopics();
+            return ResponseEntity.ok(topicService.getAllTopics());
         } catch (Exception e) {
-            e.printStackTrace();
-            return Collections.singletonList(new Topic("500", "Error", "Error getting courses"));
+            return ResponseEntity.status(500).body("Error getting topics");
         }
     }
 
     @RequestMapping("/topics/{id}")
-    public Topic getTopic(@PathVariable String id) {
+    public ResponseEntity<?> getTopic(@PathVariable String id) {
         try {
-            return topicService.getTopic(id);
+            return ResponseEntity.ok(topicService.getTopic(id));
         } catch (Exception e) {
-            e.printStackTrace();
-            return new Topic("500", "Error", "Error getting this course");
+            return ResponseEntity.status(500).body("Error getting this topic");
         }
     }
 
@@ -43,10 +36,9 @@ public class TopicController {
     public ResponseEntity<String> addTopic(@RequestBody Topic topic) {
         try {
             topicService.addTopic(topic);
-            return ResponseEntity.ok("Lesson added successfully");
+            return ResponseEntity.ok("Topic added successfully");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to add course. Error: " + e.getMessage());
+            return ResponseEntity.status(500).body("Failed to add topic. Error: " + e.getMessage());
         }
     }
 
@@ -54,12 +46,9 @@ public class TopicController {
     public ResponseEntity<String> updateTopic(@RequestBody Topic topic, @PathVariable String id) {
         try {
             topicService.updateTopic(id, topic);
-            return ResponseEntity.ok("Lesson added successfully");
-
+            return ResponseEntity.ok("Topic updated successfully");
         } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Failed to add course. Error: " + e.getMessage());
+            return ResponseEntity.status(500).body("Failed to add topic. Error: " + e.getMessage());
 
         }
     }
@@ -68,10 +57,9 @@ public class TopicController {
     public ResponseEntity<String> deleteTopic(@PathVariable String id) {
         try {
             topicService.deleteTopic(id);
-            return ResponseEntity.ok("Course deleted successfully");
+            return ResponseEntity.ok("Topic deleted successfully");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error deleting course. Error: " + e.getMessage());
+            return ResponseEntity.status(500).body("Error deleting topic. Error: " + e.getMessage());
         }
     }
 }
