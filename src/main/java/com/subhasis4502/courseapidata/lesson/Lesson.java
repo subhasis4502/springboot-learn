@@ -2,10 +2,17 @@ package com.subhasis4502.courseapidata.lesson;
 
 import com.subhasis4502.courseapidata.course.Course;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+
+@Entity
 public class Lesson {
+    @Id
     private String id;
     private String name;
     private String description;
+    @ManyToOne
     private Course course;
 
     public Lesson() {
